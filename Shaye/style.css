@@ -1,0 +1,448 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 200vh; /* damit man scrollen kann */
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  background-repeat: no-repeat;        /* Verhindert Wiederholung */
+  background-attachment: fixed;       /* Hintergrund bleibt fixiert beim Scrollen */
+  background-size: 100% 200%;          /* Verlängert den Verlauf vertikal */
+  overflow-x: hidden;
+}
+
+
+h1 {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 4em;
+  color: #ff69b4;
+}
+
+.sky {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.plane {
+  position: absolute;
+  top: 10%;
+  left: -200px;
+  width: 600px;
+  animation: fly-in 3s ease-out forwards;
+}
+
+@keyframes fly-in {
+  0% {
+    left: -200px;
+  }
+  100% {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.girl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  animation: fall 4s ease-in forwards;
+  animation-delay: 3s;
+  opacity: 0;
+}
+
+@keyframes fall {
+  0% {
+    top: 50%;
+    opacity: 1;
+  }
+  100% {
+    top: 90vh;
+    opacity: 1;
+  }
+}
+
+.map-container {
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  margin: 50px auto;
+}
+object {
+  width: 100%;
+  height: 100vh;
+  display: block;
+  margin: 0 auto;
+}
+#country-info {
+  text-align: center;
+  margin-top: 20px;
+}
+#start-game {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+#start-game:hover {
+  background-color: #0056b3;
+}
+#game-area {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  background-color: #e0f7fa;
+  border: 2px solid #00796b;
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+#bottle {
+  position: absolute;
+  bottom: 10px;
+  width: 60px;
+  height: 80px;
+  background: url("bild/bottle.png") no-repeat center/contain;
+  left: 170px;
+}
+
+.icecube {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: url("bild/icecube.png") no-repeat center/contain;
+  top: 0px;
+}
+#minigame-uk-catch {
+  text-align: center;
+  margin-top: 40px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+#minigame-uk-catch h3 {
+  font-size: 2em;
+  color: #1e90ff;
+  margin-bottom: 20px;
+}
+
+#caught-count {
+  font-size: 1.2em;
+  margin-top: 20px;
+  color: #333;
+}
+#flappy-game-area {
+  position: relative;
+  width: 500px;
+  height: 400px;
+  background: linear-gradient(to top, #87cefa, #e0ffff);
+  overflow: hidden;
+  margin: 20px auto;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+#jetski {
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  background: url('bild/jetski.png') no-repeat center/contain;
+  top: 180px;
+  left: 80px;
+}
+
+.dolphin {
+  position: absolute;
+  width: 50px;
+  height: 60px;
+  background: url('bild/dolphin.png') no-repeat center/contain;
+  right: -60px;
+}
+
+#minigame-france-flappy h3.game-title {
+  font-size: 1.8rem;
+  color: #0055aa;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+#minigame-france-flappy p#score {
+  font-size: 1.2rem;
+  color: #004488;
+  font-weight: 600;
+  text-align: center;
+}
+
+#flappy-message {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-top: 15px;
+  color: #0077cc;
+  font-weight: 700;
+  background: #d0e7ff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,119,204,0.5);
+}
+#restart-flappy {
+  display: none; 
+  margin: 10px auto;
+  padding: 8px 20px;
+  background-color: #0077cc;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  display: block; 
+}
+
+#restart-flappy:hover {
+  background-color: #005fa3;
+}
+
+#minigame-france-flappy {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* horizontal zentriert alle Kinder */
+  gap: 10px; /* Abstand zwischen den Elementen */
+  max-width: 520px; /* leicht breiter als #flappy-game-area, optional */
+  margin: 0 auto 40px auto; /* zentriert den Container horizontal, mit unten Abstand */
+}
+
+#surprise-italy {
+  display: none;          /* standardmäßig versteckt */
+  margin: 20px 650px;      /* oben/unten 20px Abstand, horizontal zentriert */
+  padding: 12px 25px;     /* schöner Innenabstand */
+  background-color: #ff6347; /* z.B. Tomatenrot */
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;         /* damit margin:auto wirkt */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+}
+
+#surprise-italy:hover {
+  background-color: #e5533d;
+}
+
+#balloons-container {
+  position: relative;
+  height: 400px;
+  margin: 0 auto;
+  width: 500px;
+  overflow: visible;
+}
+
+.balloon {
+  width: 90px;
+  height: 130px;
+  background-image: url('bild/balloon.png');
+  background-size: cover;
+  position: absolute;
+  bottom: 0;
+  animation: floatUp 4s ease-in-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    bottom: 0;
+    opacity: 0;
+  }
+  100% {
+    bottom: 400px;
+    opacity: 1;
+  }
+}
+
+#sunset-img {
+  display: none;
+  width: 100%;
+  height: auto;
+  max-height: 80vh; /* Maximal 80% der Fensterhöhe */
+  object-fit: cover; /* falls du willst, dass das Bild nicht verzerrt aussieht */
+  margin: 0 auto;
+  display: block;
+}
+
+#photo-game-area {
+  position: relative;
+  width: 700px;      /* größer als vorher */
+  height: 300px;     /* mehr Platz in der Höhe */
+  border: 2px solid #ccc;
+  margin: 0 auto;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
+
+#camera-frame {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 3px solid red;
+  pointer-events: none;
+}
+
+
+.photo-object {
+  position: absolute;
+  top: 100px; /* <-- neue Position nach unten verschoben */
+  width: 70px;
+  height: 70px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+#flash-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.flash {
+  animation: flashAnim 0.2s ease;
+}
+
+@keyframes flashAnim {
+  0% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+#photo-count, 
+#photo-win-message {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+#minigame-germany-photos h3 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+#GB {
+  fill: #008000;       /* grün */
+  stroke: #004d00;     /* dunklerer Rand */
+  stroke-width: 2;
+  transition: fill 0.3s ease;
+}
+
+#GB:hover {
+  fill: #00cc00;       /* helleres grün beim Hover */
+}
+
+#photo-book {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+        #minigame-austria-ski {
+            width: 400px; /* Breite des Spielbereichs */
+            height: 500px; /* Höhe des Spielbereichs */
+            background-color: #ADD8E6; /* Hellblauer Himmel */
+            background-image: linear-gradient(to bottom, #ADD8E6 0%, #D6EEFF 50%, #E0FFFF 100%);
+            border: 5px solid #8B4513; /* Brauner Rand wie ein Holzrahmen */
+            margin: 20px auto;
+            position: relative; /* SEHR WICHTIG für absolute Positionierung der Kinder-Elemente */
+            overflow: hidden; /* Wichtig, damit die Bäume nicht über den Rand ragen */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            /* Wenn das Spiel startet, wird display: block; vom JS gesetzt */
+        }
+
+        #ski-game-area {
+            width: 100%; /* Füllt den übergeordneten Container */
+            height: 100%; /* Füllt den übergeordneten Container */
+            position: relative; /* SEHR WICHTIG, falls Elemente darin absolut positioniert werden */
+        }
+
+        #skier {
+            width: 50px;
+            height: 70px; 
+            background-image: url('bild/tree.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            position: absolute; 
+            bottom: 20px; 
+            left: 175px; 
+            z-index: 10; 
+        }
+
+        .tree {
+            width: 60px; /* Muss eine Breite haben, sonst unsichtbar */
+            height: 80px; /* Muss eine Höhe haben, sonst unsichtbar */
+            background-image: url('bild/tree.png'); /* PFAD MUSS STIMMEN! */
+            background-size: contain;
+            background-repeat: no-repeat;
+            position: absolute; /* SEHR WICHTIG für JS-Bewegung mit top/left */
+            top: -100px; /* Startposition außerhalb des oberen Rands */
+            z-index: 5; /* Bäume hinter dem Skifahrer */
+        }
+
+        /* style.css */
+.airplane-welcome-text {
+    text-align: center; /* Zentriert den Text */
+    font-size: 1.5em; /* Macht den Text größer */
+    color: #333; /* Dunkelgraue Farbe */
+    font-weight: bold; /* Macht den Text fett */
+    position: absolute; /* Wichtig, damit du ihn genau positionieren kannst */
+    width: 100%; /* Nimmt die volle Breite des 'sky' divs ein */
+    top: 20px; /* Abstand vom oberen Rand des 'sky' divs */
+    z-index: 10; /* Stellt sicher, dass der Text über dem Flugzeug liegt */
+}
+
+.sky {
+    position: relative; /* Wichtig, damit absolute Positionierung innerhalb davon funktioniert */
+    /* ... weitere bestehende Stile für 'sky' ... */
+}
+
+/* style.css */
+
+.game-feedback-message {
+    font-size: 1.5em; /* Größere Schrift */
+    font-weight: bold; /* Fetter Text */
+    margin-top: 20px; /* Abstand nach oben */
+    margin-bottom: 20px; /* Abstand nach unten */
+    padding: 15px; /* Innenabstand */
+    border-radius: 8px; /* Leicht abgerundete Ecken */
+    text-align: center; /* Text zentrieren */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Leichter Schatten */
+    transition: all 0.3s ease-in-out; /* Weicher Übergang für Änderungen */
+}
+
+/* Farben für Erfolg und Niederlage */
+.game-feedback-message.success {
+    background-color: #d4edda; /* Hellgrüner Hintergrund */
+    color: #155724; /* Dunkelgrüner Text */
+    border: 1px solid #c3e6cb;
+}
+
+.game-feedback-message.failure {
+    background-color: #f8d7da; /* Hellroter Hintergrund */
+    color: #721c24; /* Dunkelroter Text */
+    border: 1px solid #f5c6cb;
+}

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Happy Birthday!</title>
+ <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<h1>🎉 Happy Birthday! 🎉</h1>
+
+<div class="sky">
+    <p class="airplane-welcome-text">Welcome brithday gal! As a birthday gift you're getting a free flight to europe! Desafortunadamente, the money wasn't enough to pay for the landing so youre gonna have to jump out of the plane. Well, nothing new for you, right? Luggage? No need for that. Don't worry you got your essentials and i provided the other things you might need on your journey. So! Enjoy that little adventure and who knows, maybe we'll meet again! As a little tip: you should try and land somewhere in the UK! (Scroll down and click on the UK on the map)
+</p> 
+  <img src="bild/aeroplane-147495_1280.png" alt="Flugzeug" class="plane">
+  <img src="bild/Flux_Dev_a_joyful_young_girl_with_a_bright_smile_and_rosy_chee_1-removebg-preview (1).png" alt="Springendes Mädchen" class="girl">
+</div>
+
+<div class="map-container">
+  <object type="image/svg+xml" data="bild/europe.svg" id="europe-map"></object>
+</div>
+
+<div id="country-info" style="display:block;">
+  <h2 id="country-name"></h2>
+  <p id="country-text"></p>
+  <p id="country-details-text"></p>
+    <button id="start-game" style="display: none;">Start minigame!</button>
+    <button id="start-germany-game" style="display: none;">Start Photo Hunt! 📸</button>
+    <button id="start-austria-game" style="display: none;">Start Skiing! 🏔️</button>
+</div>
+
+<button id="surprise-italy" style="display:none;">Click for a surprise 🎈</button>
+
+<div id="italy-surprise" style="display:none; text-align:center; margin-top:20px;">
+  <div id="balloons-container"></div>
+  <img id="sunset-img" src="bild/sunset.png" alt="Sonnenuntergang"/>
+  <p id="surprise-text" style="display:none; font-size:1.2rem; color:#333; margin-top:10px;">
+    A nice sunset and some balloons! Enjoy the view man. Take some rest, breath, go for swim maybe! Some yoga, whatever you like man it's your birthday. And when you're ready you can go to germany and see what awaits you there.🌅
+  </p>
+</div>
+
+<div id="minigame-uk-catch" style="display: none;">
+  <h3>Catch 19 Ice Cubes! ❄️</h3>
+  <h2>(Use arrow keys to move the bottle)</h2>
+  <div id="game-area">
+    <div id="bottle"></div>
+  </div>
+  <p id="caught-count">Caught: 0 / 19</p>
+</div>
+
+<div id="minigame-france-flappy" style="display: none;">
+  <h3 class="game-title">Jetski vs. Dolphins 🐬</h3>
+  <div id="flappy-game-area">
+    <div id="jetski"></div>
+  </div>
+  <p id="score">Score: 0</p>
+  <p id="flappy-message" style="display:none;"></p>
+  <button id="restart-flappy" style="display:none;">Restart Game</button>
+</div>
+
+<div id="minigame-germany-photos" style="display: none;">
+  <h3 style="font-size: 1.6rem; color: #333; margin-bottom: 10px;">
+  📷 Photo Hunt – Capture 9 Perfect Shots!
+</h3>
+<h2>(Use your arrow keys to align the camera. Take a picture with the spacebar)</h2>
+  <div id="photo-game-area">
+    <div id="camera-frame"></div>
+    <div id="flash-effect"></div>
+  </div>
+ <p id="photo-count" style="font-size: 1.2rem; color: #444; margin-bottom: 8px;">
+  Photos taken: 0 / 9
+</p>
+  <p id="photo-win-message" style="display:none; font-size: 1.2rem; color: green; font-weight: bold; margin-top: 10px;">
+  📸 Congratulations! You've captured all the moments!
+</p>
+</div>
+
+<div id="minigame-austria-ski" style="display: none;">
+    <h3 class="game-title">Ski down the alps! 🏔️</h3>
+    <h3 class="game-title">(use your arrow keys to dodge the trees)</h3>
+    <div id="ski-game-area">
+      <div id="skier" style="width: 50px !important; height: 70px !important; background-image: url('bild/skier.png') !important; background-color: red !important;"></div>></div>
+    </div>
+    <p id="ski-score">Points: 0 / 19</p>
+    <p id="ski-message" class="game-feedback-message" style="display:none;"></p>
+    <button id="restart-ski" style="display:none;">Neustart</button>
+</div>
+
+
+<script>
+let franceGameReady = false;
+
+// Funktion zum Ausblenden ALLER Minispiel-Container und Buttons
+function hideAllMinigamesAndButtons() {
+    document.getElementById("minigame-uk-catch").style.display = "none";
+    document.getElementById("minigame-france-flappy").style.display = "none";
+    document.getElementById("minigame-germany-photos").style.display = "none";
+    document.getElementById("minigame-austria-ski").style.display = "none";
+    document.getElementById("ski-score").style.display = "none";
+    document.getElementById("surprise-italy").style.display = "none"; // Italien Überraschungs-Button
+    document.getElementById("italy-surprise").style.display = "none"; // Italien Überraschungs-Container
+    document.getElementById("start-game").style.display = "none"; // Generischer UK Start-Button
+    document.getElementById("start-germany-game").style.display = "none"; // Deutschland Start-Button
+    document.getElementById("start-austria-game").style.display = "none"; // Österreich Start-Button
+    
+    // Auch die Nachrichten und Restart-Buttons der Spiele ausblenden
+    document.getElementById("flappy-message").style.display = "none";
+    document.getElementById("restart-flappy").style.display = "none";
+    document.getElementById("photo-win-message").style.display = "none";
+    document.getElementById("ski-message").style.display = "none";
+    document.getElementById("restart-ski").style.display = "none";
+
+    // Fotobuch und finale Nachricht entfernen, falls vorhanden
+    const photoBook = document.getElementById("photo-book");
+    if (photoBook) photoBook.remove();
+    const finalMessage = document.querySelector("#photo-book + div"); // Annahme: Nachricht ist direkt nach Fotobuch
+    if (finalMessage && finalMessage.textContent.includes("Now look at that! That's what I call a photo album. Alright you're ready for your final destination. Austria! I booked a nice little 10 hour long train ride! Enjoy the show and I see you in Austria!")) finalMessage.remove();
+}
+
+
+// Karte initialisieren
+window.addEventListener("DOMContentLoaded", () => {
+  const svgObject = document.getElementById("europe-map");
+
+  svgObject.addEventListener("load", () => {
+    const svgDoc = svgObject.contentDocument;
+    const uk = svgDoc.getElementById("GB");
+    const france = svgDoc.getElementById("FR");
+    const italy = svgDoc.getElementById("IT");
+    const germany = svgDoc.getElementById("DE");
+    const austria = svgDoc.getElementById("AT");
+
+
+    if (uk) {
+      uk.style.cursor = "pointer";
+      uk.addEventListener("click", () => {
+        hideAllMinigamesAndButtons(); 
+
+        const countryNameElement = document.getElementById("country-name");
+        const countryTextElement = document.getElementById("country-text");
+        const countryDetailsTextElement = document.getElementById("country-details-text"); 
+
+        const countryInfoContainer = document.getElementById("country-info"); 
+        
+        countryNameElement.textContent = "United Kingdom (UK) 🇬🇧";
+        countryTextElement.textContent = "Welcome to the UK! 🎩"; 
+
+        countryDetailsTextElement.textContent = "Well done! You nailed the landing and entered the land of the... brits. Man you spilled all your icey water on the way down! It's okay just quickly gather some ice cubes and go to your next location. We got a tight time schedule here!";
+        countryDetailsTextElement.style.display = "block"; 
+
+        countryInfoContainer.style.display = "block";
+        document.getElementById("start-game").style.display = "inline-block"; 
+
+        countryInfoContainer.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
+    if (france) {
+      france.style.cursor = "pointer";
+      france.addEventListener("click", () => {
+        hideAllMinigamesAndButtons(); // Alles ausblenden
+        document.getElementById("country-name").textContent = "France";
+        document.getElementById("country-text").textContent = "Congrats you're now in France! Kinda boring here, no? No worries, I rented a jetski for you so you can get to italy asap. But watch out for the dolphins! (Click on the Game and then use your spacebar to dodge the dolphins)";
+        document.getElementById("country-info").style.display = "block";
+
+        // Frankreich startet das Minispiel direkt (wie zuvor)
+        document.getElementById("minigame-france-flappy").style.display = "block";
+        document.getElementById("minigame-france-flappy").scrollIntoView({ behavior: "smooth" });
+        franceGameReady = true;
+      });
+    }
+
+    if (italy) {
+      italy.style.cursor = "pointer";
+      italy.addEventListener("click", () => {
+        hideAllMinigamesAndButtons(); // Alles ausblenden
+        document.getElementById("country-name").textContent = "Italy";
+        document.getElementById("country-text").textContent = "Bella Italia! Now, this is still a vacation! Relax, take a step a back. A little surprise is waiting for you!";
+        document.getElementById("country-info").style.display = "block";
+        document.getElementById("surprise-italy").style.display = "inline-block"; // Nur Italien-Button anzeigen
+
+        document.getElementById("country-info").scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
+    if (germany) {
+        germany.style.cursor = "pointer";
+        germany.addEventListener("click", () => {
+            hideAllMinigamesAndButtons(); // Alles ausblenden
+            document.getElementById("country-name").textContent = "Germany";
+            document.getElementById("country-text").textContent = "Your vacation is almost over so don't get stressed out. WHAT DO YOU MEAN YOU DIDN'T TAKE A SINGLE PICTURE! Alright man here's the plan: Take this camera and take some photos of german sights. And food maybe. You gotta have a small photo album or something to show off to your family.";
+            document.getElementById("country-info").style.display = "block";
+            document.getElementById("start-germany-game").style.display = "inline-block"; // Nur Deutschland-Button anzeigen
+
+            document.getElementById("country-info").scrollIntoView({ behavior: "smooth" });
+        });
+    }
+
+    if (austria) {
+        austria.style.cursor = "pointer";
+        austria.addEventListener("click", () => {
+            hideAllMinigamesAndButtons(); // Alles ausblenden
+            document.getElementById("country-name").textContent = "Austria";
+            document.getElementById("country-text").textContent = "Welcome to Austria! We got Mozart, Schwarzwälderkirschtorte and of course: the Alps! Your last adventure awaits you on the top of the Großglockner, Austria's biggest mountain with 12,461 feet. Well the real adventure is going down the mountain. So put on your ski and I'll see you at the bottom!";
+            document.getElementById("country-info").style.display = "block";
+            document.getElementById("start-austria-game").style.display = "inline-block"; // Nur Österreich-Button anzeigen
+            
+            document.getElementById("country-info").scrollIntoView({ behavior: "smooth" });
+        });
+    }
+  });
+
+// Event Listener für die neuen Start-Buttons
+
+  // Start UK Minigame
+  document.getElementById("start-game").addEventListener("click", () => {
+    hideAllMinigamesAndButtons(); // Alle ausblenden, falls noch was sichtbar ist
+    document.getElementById("minigame-uk-catch").style.display = "block";
+    document.getElementById("minigame-uk-catch").scrollIntoView({ behavior: "smooth" });
+    startCatchGame();
+  });
+
+// Start Germany Minigame
+document.getElementById("start-germany-game").addEventListener("click", () => {
+    hideAllMinigamesAndButtons(); // Alle ausblenden
+    document.getElementById("minigame-germany-photos").style.display = "block";
+    document.getElementById("minigame-germany-photos").scrollIntoView({ behavior: "smooth" });
+    startPhotoGame();
+});
+
+// Start Austria Minigame
+document.getElementById("start-austria-game").addEventListener("click", () => {
+    console.log("Österreich-Button geklickt!"); // <-- FÜGE DIESE ZEILE HIER EIN
+    hideAllMinigamesAndButtons();
+    document.getElementById("minigame-austria-ski").style.display = "block";
+    document.getElementById("minigame-austria-ski").scrollIntoView({ behavior: "smooth" });
+    startSkiGame();
+});
+
+
+// Überraschungsbutton Italien: zeigt Ballons, Bild und Text
+document.getElementById("surprise-italy").addEventListener("click", () => {
+  const surprise = document.getElementById("italy-surprise");
+  surprise.style.display = "block";
+
+  const balloonsContainer = document.getElementById("balloons-container");
+  balloonsContainer.innerHTML = "";
+
+  const containerWidth = 500;
+  const balloonCount = 7;
+  const spacing = containerWidth / (balloonCount + 1);
+
+  for (let i = 0; i < balloonCount; i++) {
+    const balloon = document.createElement("div");
+    balloon.classList.add("balloon");
+    balloon.style.left = (spacing * (i + 1) - 45) + "px";
+    balloon.style.animationDelay = (i * 0.4) + "s";
+    balloonsContainer.appendChild(balloon);
+  }
+
+  document.getElementById("sunset-img").style.display = "block";
+  document.getElementById("surprise-text").style.display = "block";
+
+  document.getElementById("surprise-italy").style.display = "none"; // Den Surprise-Button selbst ausblenden, nachdem geklickt wurde
+
+  document.getElementById("surprise-text").scrollIntoView({ behavior: "smooth" });
+});
+
+}); // Ende DOMContentLoaded
+
+
+let caught = 0;
+const total = 19;
+
+function startCatchGame() {
+    caught = 0; // Reset for restart
+    document.getElementById("caught-count").textContent = `Caught: ${caught} / ${total}`;
+  const gameArea = document.getElementById("game-area");
+  const bottle = document.getElementById("bottle");
+  let bottleX = 170;
+
+    // Remove existing icecubes for a clean restart
+    const existingIceCubes = gameArea.querySelectorAll('.icecube');
+    existingIceCubes.forEach(cube => cube.remove());
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") bottleX = Math.max(0, bottleX - 20);
+    if (e.key === "ArrowRight") bottleX = Math.min(340, bottleX + 20);
+    bottle.style.left = bottleX + "px";
+  });
+
+  function dropIceCube() {
+    const ice = document.createElement("div");
+    ice.className = "icecube";
+    ice.style.left = Math.random() * 370 + "px";
+    gameArea.appendChild(ice);
+
+    let y = 0;
+    const interval = setInterval(() => {
+      y += 5;
+      ice.style.top = y + "px";
+
+      const iceX = parseFloat(ice.style.left);
+      const distance = Math.abs(iceX - bottleX);
+
+      if (y >= 420 && distance < 40) {
+        caught++;
+        document.getElementById("caught-count").textContent = `Caught: ${caught} / ${total}`;
+        clearInterval(interval);
+        ice.remove();
+
+        if (caught >= total) {
+          alert("🎉 Perfect! You got yourself some crispy ice water. Now youre ready to head to your next location: France! Go back to the map and click on France.");
+        }
+      }
+
+      if (y > 500) {
+        clearInterval(interval);
+        ice.remove();
+      }
+    }, 30);
+  }
+
+  let drops = 0;
+  const dropper = setInterval(() => {
+    if (caught >= total || drops >= 40) {
+      clearInterval(dropper);
+    } else {
+      dropIceCube();
+      drops++;
+    }
+  }, 1200);
+}
+
+function initJetskiGame() {
+  const gameArea = document.getElementById("flappy-game-area");
+  const jetski = document.getElementById("jetski");
+  let jetskiY = 180;
+  let velocity = 0;
+  let score = 0;
+  let gameStarted = false;
+
+  const gravity = 0.6;
+  const jump = -10;
+
+  let gameLoopId;
+  let dolphinIntervalId;
+
+function gameLoop() {
+  velocity += gravity;
+  jetskiY += velocity;
+  if (jetskiY < 0) jetskiY = 0;
+  if (jetskiY > 360) return endGame(false);
+
+  jetski.style.top = jetskiY + "px";
+
+  const padding = 20; // Größe des Hitbox-Puffers
+  const dolphins = document.getElementsByClassName("dolphin");
+  const jetskiRect = jetski.getBoundingClientRect();
+
+  const jetskiHitbox = {
+    left: jetskiRect.left + padding,
+    right: jetskiRect.right - padding,
+    top: jetskiRect.top + padding,
+    bottom: jetskiRect.bottom - padding,
+  };
+
+  for (let dolphin of dolphins) {
+    const dolphinRect = dolphin.getBoundingClientRect();
+
+    const dolphinHitbox = {
+      left: dolphinRect.left + padding,
+      right: dolphinRect.right - padding,
+      top: dolphinRect.top + padding,
+      bottom: dolphinRect.bottom - padding,
+    };
+
+    if (
+      dolphinHitbox.left < jetskiHitbox.right &&
+      dolphinHitbox.right > jetskiHitbox.left &&
+      dolphinHitbox.top < jetskiHitbox.bottom &&
+      dolphinHitbox.bottom > jetskiHitbox.top
+    ) {
+      return endGame(false);
+    }
+  }
+
+  gameLoopId = requestAnimationFrame(gameLoop);
+}
+
+
+  function endGame(win = false) {
+    const message = document.getElementById("flappy-message");
+    const restartBtn = document.getElementById("restart-flappy");
+
+    if (gameLoopId) cancelAnimationFrame(gameLoopId);
+    if (dolphinIntervalId) clearInterval(dolphinIntervalId);
+
+    if (win) {
+      message.textContent = "🎉 You won! Ready to go to the next country!";
+    } else {
+      message.textContent = "💥 Game Over! Score: " + score;
+    }
+
+    message.style.display = "block";
+    restartBtn.style.display = "inline-block";
+  }
+
+  document.getElementById("restart-flappy").onclick = () => {
+    window.location.reload();
+  };
+
+  function startGame() {
+    if (gameStarted) return;
+    gameStarted = true;
+
+    gameLoop();
+
+    dolphinIntervalId = setInterval(() => {
+      const dolphin = document.createElement("div");
+      dolphin.className = "dolphin";
+      dolphin.style.position = "absolute";
+      dolphin.style.width = "100px";
+      dolphin.style.height = "60px";
+      dolphin.style.backgroundImage = "url('bild/dolphin.png')";
+      dolphin.style.backgroundSize = "cover";
+      dolphin.style.backgroundRepeat = "no-repeat";
+      dolphin.style.backgroundPosition = "center";
+      dolphin.style.left = "500px"; // Start ganz rechts
+      dolphin.style.top = Math.random() * 340 + "px";
+      gameArea.appendChild(dolphin);
+
+      let dolphinX = 500;
+      const move = setInterval(() => {
+        dolphinX -= 4; // Bewegung nach links
+        if (dolphinX < -100) {
+          dolphin.remove();
+          clearInterval(move);
+          score++;
+          document.getElementById("score").textContent = `Score: ${score}`;
+          if (score >= 19) {
+            endGame(true);
+          }
+        } else {
+          dolphin.style.left = dolphinX + "px";
+        }
+      }, 20);
+    }, 1500);
+  }
+
+  document.addEventListener("keydown", (e) => {
+  if (e.code === "Space") {
+    if (franceGameReady) {
+      startGame(); // startet beim ersten Mal
+      franceGameReady = false;
+    }
+    velocity = jump; // jedes Mal springen
+  }
+});
+
+document.addEventListener("click", () => {
+  if (gameStarted) {
+    velocity = jump;
+  }
+});
+
+
+  jetski.style.top = jetskiY + "px";
+}
+
+initJetskiGame();
+
+
+let photoScore = 0;
+let cameraX = 250;
+let savedPhotos = [];
+let photoGameInterval; // Speichert den Interval für die Fotoobjekte
+let cameraKeyListener; // Speichert den Keydown-Listener für die Kamera
+let snapKeyListener; // Speichert den Keydown-Listener für das Schnappen
+
+function startPhotoGame() {
+    photoScore = 0; // Reset for restart
+    savedPhotos = []; // Reset photos for restart
+    document.getElementById("photo-count").textContent = `Photos taken: ${photoScore} / 9`;
+    document.getElementById("photo-win-message").style.display = "none";
+    
+    // Alte Foto-Objekte entfernen
+    const existingPhotos = document.getElementById("photo-game-area").querySelectorAll('.photo-object');
+    existingPhotos.forEach(photo => photo.remove());
+
+  const frame = document.getElementById("camera-frame");
+  const area = document.getElementById("photo-game-area");
+  const countDisplay = document.getElementById("photo-count");
+  const winMessage = document.getElementById("photo-win-message");
+
+  let cameraX = 250;
+  let cameraY = 100;
+
+    frame.style.left = cameraX + "px";
+    frame.style.top = cameraY + "px";
+
+
+  function moveCamera(e) {
+    if (e.key === "ArrowLeft") {
+      cameraX = Math.max(0, cameraX - 20);
+    } else if (e.key === "ArrowRight") {
+      cameraX = Math.min(500, cameraX + 20);
+    } else if (e.key === "ArrowUp") {
+      cameraY = Math.max(0, cameraY - 20);
+    } else if (e.key === "ArrowDown") {
+      cameraY = Math.min(250, cameraY + 20);
+    }
+
+    frame.style.left = cameraX + "px";
+    frame.style.top = cameraY + "px";
+  }
+
+
+  const photosSrc = [
+  "bild/dom.png",
+  "bild/berlin.png",
+  "bild/dresden.png",
+  "bild/neuschw.png",
+  "bild/see.png",
+  "bild/tal.png",
+  "bild/kebab.png",
+];
+
+function createPhotoObject() {
+  const photo = document.createElement("div");
+  photo.classList.add("photo-object");
+
+  const randomIndex = Math.floor(Math.random() * photosSrc.length);
+  photo.style.backgroundImage = `url('${photosSrc[randomIndex]}')`;
+  const randomY = Math.floor(Math.random() * 180) + 40;
+  photo.style.top = `${randomY}px`;
+
+
+  photo.style.left = "-80px";
+  area.appendChild(photo);
+
+  let x = -80;
+  const move = setInterval(() => {
+    x += 3;
+    photo.style.left = x + "px";
+
+    if (x > 620) {
+      photo.remove();
+      clearInterval(move);
+    }
+  }, 20);
+}
+
+  function trySnapPhoto() {
+    const photos = document.getElementsByClassName("photo-object");
+    for (let photo of photos) {
+      const photoX = parseFloat(photo.style.left);
+      const photoY = parseFloat(photo.style.top);
+
+      const inX = photoX >= cameraX && photoX <= cameraX + 100;
+      const inY = photoY >= cameraY && photoY <= cameraY + 100;
+
+      if (inX && inY) {
+        const bgImage = photo.style.backgroundImage;
+        savedPhotos.push(bgImage);
+
+        photo.remove();
+        photoScore++;
+        countDisplay.textContent = `Photos taken: ${photoScore} / 9`;
+
+        const flash = document.getElementById("flash-effect");
+        flash.classList.remove("flash");
+        void flash.offsetWidth;
+        flash.classList.add("flash");
+
+        if (photoScore >= 9) {
+            // Spiel beenden
+            clearInterval(photoGameInterval);
+            document.removeEventListener("keydown", cameraKeyListener);
+            document.removeEventListener("keydown", snapKeyListener);
+
+          winMessage.style.display = "block";
+          winMessage.style.opacity = 0;
+          winMessage.style.transition = "opacity 1s";
+          setTimeout(() => {
+            winMessage.style.opacity = 1;
+            // Fotobuch anzeigen
+            const photoBook = document.createElement("div");
+            photoBook.id = "photo-book";
+            photoBook.style.display = "flex";
+            photoBook.style.flexWrap = "wrap";
+            photoBook.style.justifyContent = "center";
+            photoBook.style.gap = "10px";
+            photoBook.style.marginTop = "30px";
+
+            savedPhotos.forEach(src => {
+              const img = document.createElement("div");
+              img.style.width = "100px";
+              img.style.height = "100px";
+              img.style.backgroundImage = src;
+              img.style.backgroundSize = "cover";
+              img.style.border = "3px solid white";
+              img.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+              photoBook.appendChild(img);
+            });
+
+            document.body.appendChild(photoBook);
+            const message = document.createElement("div");
+            message.textContent = " Now look at that! That's what I call a photo album. Alright you're ready for your final destination. Austria! I booked a nice little 10 hour long train ride! Enjoy the show and I see you in Austria!";
+            message.style.textAlign = "center";
+            message.style.marginTop = "40px";
+            message.style.fontSize = "1.5rem";
+            message.style.fontFamily = "'Poppins', sans-serif";
+            message.style.color = "#ffffff";
+            message.style.textShadow = "0 0 5px rgba(0,0,0,0.5)";
+            document.body.appendChild(message);
+
+            document.body.style.minHeight = "200vh"; // Um Platz für Fotobuch zu schaffen
+          }, 50);
+        }
+        return;
+      }
+    }
+  }
+
+    // Event Listener neu registrieren und speichern
+    cameraKeyListener = (e) => moveCamera(e);
+    snapKeyListener = (e) => {
+        if (e.code === "Space") {
+            trySnapPhoto();
+        }
+    };
+
+  document.addEventListener("keydown", cameraKeyListener);
+  document.addEventListener("keydown", snapKeyListener);
+
+    // Interval neu starten und speichern
+    photoGameInterval = setInterval(() => {
+    if (photoScore < 9) createPhotoObject();
+  }, 2000);
+}
+
+
+let skierX = 175;
+let skiScore = 0;
+const totalTreesToDodge = 4;
+let gameRunning = false;
+let gameIntervalId;
+let treeGenerationIntervalId;
+let currentTreeIntervals = []; // Array, um alle setInterval-IDs der Bäume zu speichern
+
+function startSkiGame() {
+    console.log("startSkiGame() wird aufgerufen.");
+    skierX = 175;
+    skiScore = 0;
+    gameRunning = true;
+
+    const skierElement = document.getElementById("skier");
+    if (skierElement) {
+        skierElement.style.left = skierX + "px";
+        console.log("Skifahrer-Position gesetzt:", skierElement.style.left); // <-- NEU
+    } else {
+        console.error("Fehler: Skifahrer-Element nicht gefunden!"); // <-- NEU
+    }
+
+    document.getElementById("ski-score").textContent = `Punkte: ${skiScore} / ${totalTreesToDodge}`;
+    document.getElementById("ski-message").style.display = "none";
+    document.getElementById("restart-ski").style.display = "none";
+
+    // Alle alten Bäume entfernen und deren Intervalle löschen
+    const gameArea = document.getElementById("ski-game-area");
+    if (gameArea) { // Sicherstellen, dass gameArea existiert
+        console.log("Game Area gefunden."); // <-- NEU
+        while (gameArea.querySelector('.tree')) {
+            gameArea.querySelector('.tree').remove();
+        }
+    } else {
+        console.error("Fehler: Ski-Game-Area nicht gefunden!"); // <-- NEU
+    }
+
+    currentTreeIntervals.forEach(intervalId => clearInterval(intervalId));
+    currentTreeIntervals = []; // Array leeren
+
+    gameIntervalId = requestAnimationFrame(gameLoopSki);
+    treeGenerationIntervalId = setInterval(createTree, 1500);
+
+    document.removeEventListener("keydown", handleSkiInput);
+    document.addEventListener("keydown", handleSkiInput);
+    console.log("Skispiel gestartet und Listener für Bewegungen angehängt.");
+}
+
+function handleSkiInput(e) {
+    if (!gameRunning) return;
+
+    if (e.key === "ArrowLeft") {
+        skierX = Math.max(0, skierX - 25);
+    } else if (e.key === "ArrowRight") {
+        skierX = Math.min(350, skierX + 25);
+    }
+    document.getElementById("skier").style.left = skierX + "px";
+}
+
+function createTree() {
+    if (!gameRunning) return;
+
+    const tree = document.createElement("div");
+    tree.className = "tree";
+    tree.style.left = Math.random() * (400 - 60) + "px";
+    document.getElementById("ski-game-area").appendChild(tree);
+
+    let treeY = -100;
+    const moveTreeInterval = setInterval(() => {
+        if (!gameRunning) {
+            clearInterval(moveTreeInterval);
+            tree.remove();
+            return;
+        }
+
+        treeY += 5;
+        tree.style.top = treeY + "px";
+
+        const skier = document.getElementById("skier");
+        const skierRect = skier.getBoundingClientRect();
+        const treeRect = tree.getBoundingClientRect();
+
+        if (
+            treeRect.left < skierRect.right &&
+            treeRect.right > skierRect.left &&
+            treeRect.top < skierRect.bottom &&
+            treeRect.bottom > skierRect.top
+        ) {
+            endSkiGame(false);
+            clearInterval(moveTreeInterval);
+            tree.remove();
+            return;
+        }
+
+        if (treeY > 500) {
+            clearInterval(moveTreeInterval);
+            tree.remove();
+            skiScore++;
+            document.getElementById("ski-score").textContent = `Punkte: ${skiScore} / ${totalTreesToDodge}`;
+            if (skiScore >= totalTreesToDodge) {
+                endSkiGame(true);
+            }
+        }
+    }, 20);
+    currentTreeIntervals.push(moveTreeInterval); // Speichern der Interval-ID
+}
+
+function gameLoopSki() {
+    if (!gameRunning) return;
+    gameIntervalId = requestAnimationFrame(gameLoopSki);
+}
+
+function endSkiGame(win) {
+    gameRunning = false;
+    cancelAnimationFrame(gameIntervalId);
+    clearInterval(treeGenerationIntervalId);
+    document.removeEventListener("keydown", handleSkiInput);
+
+    currentTreeIntervals.forEach(intervalId => clearInterval(intervalId)); // Alle Baum-Intervalle stoppen
+    currentTreeIntervals = []; // Array leeren
+
+    const messageDisplay = document.getElementById("ski-message");
+    const restartBtn = document.getElementById("restart-ski");
+
+    if (win) {
+        messageDisplay.textContent = `Congrats! You didn't break a leg while going down! Now unfortunately your vacation comes to an end here, the budget was tight. Of course you can do so many other things in austria but I guess you have to fly here and find out yourself! I'm sure you'll find a nice austrian tour guide though that will show you around. I hope you some fun on this nice little vacation and that everything worked out as planned (man i really hope that this to so damn look)! Now, you might think, did the creator of this website spend hours on hours making some goofy minigames just to show how much he appreciates this friendship and you as a person instead of just using words like a normal human being? Maybe. But on a serious note: you're truely one of a kind you're so awesome and funny like fr and I really enjoy spending time with you. And I know its a little late for that now but I wish you the happiest of all birthdays :D `;
+        messageDisplay.style.color = "black";
+    } else {
+        messageDisplay.textContent = `Congrats! You didn't break a leg while going down! Now unfortunately your vacation comes to an end here, the budget was tight. Of course you can do so many other things in austria but I guess you have to fly here and find out yourself! I'm sure you'll find a nice austrian tour guide though that will show you around. I hope you some fun on this nice little vacation and that everything worked out as planned (man i really hope that this to so damn look)! Now, you might think, did the creator of this website spend hours on hours making some goofy minigames just to show how much he appreciates this friendship and you as a person instead of just using words like a normal human being? Maybe. But on a serious note: you're truely one of a kind you're so awesome and funny like fr and I really enjoy spending time with you. And I know its a little late for that now but I wish you the happiest of all birthdays :D`;
+        messageDisplay.style.color = "black";
+    }
+    messageDisplay.style.display = "block";
+    restartBtn.style.display = "inline-block";
+
+    const gameArea = document.getElementById("ski-game-area");
+    const trees = gameArea.querySelectorAll('.tree');
+    trees.forEach(tree => tree.remove());
+}
+
+document.getElementById("restart-ski").addEventListener("click", () => {
+    startSkiGame();
+});
+
+</script>
+
+</body>
+</html>
